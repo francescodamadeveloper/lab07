@@ -33,10 +33,18 @@ public final class MonthSorterNested implements MonthSorter {
             return month.ActualName;
         }
         public Month fromString(final String month){
+            int equal_months=0;
+            Month result=null;
             for(final Month name : Month.values()){
                 if(name.getActualName(name).compareToIgnoreCase(month) == 0){
-                    return name;
-                } else if()
+                    result=name;
+                    equal_months++;
+                }
+            }
+            if(equal_months==1){
+                return result;
+            } else {
+                throw new IllegalArgumentException("no month found or inconclusive string received");
             }
         }
     }

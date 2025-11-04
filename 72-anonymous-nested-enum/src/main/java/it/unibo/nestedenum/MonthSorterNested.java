@@ -24,38 +24,56 @@ public final class MonthSorterNested implements MonthSorter {
         NOVEMBER("November",USUAL_MONTH),
         DECEMBER("December",LONG_MONTH);
         private final String ActualName;
-        private final int Days;
-        private Month(final String name, final int days){
+        private final int days;
+        private Month(final String name,final int days){
             this.ActualName=name;
-            this.Days=days;
+            this.days=days;
         }
         public String getActualName(final Month month){
             return month.ActualName;
         }
-        public Month fromString(final String month){
+        public int getDays(){
+            return this.days;
+        }
+        public static Month fromString(final String month){
             int equal_months=0;
             Month result=null;
             for(final Month name : Month.values()){
-                if(name.getActualName(name).compareToIgnoreCase(month) == 0){
+                if(name.getActualName(name).toLowerCase().startsWith(month.toLowerCase())){
                     result=name;
                     equal_months++;
-                }
+                } 
             }
             if(equal_months==1){
                 return result;
-            } else {
+            } else{
                 throw new IllegalArgumentException("no month found or inconclusive string received");
             }
         }
     }
+    class SortByDate implements Comparator<String> {
 
+        @Override
+        public int compare(String o1, String o2) {
+            return Integer.compare(Month.fromString(o1).getDays(),Month.fromString(o2).getDays());
+        }
+        
+    }
+    class SortByMonthOrder implements Comparator<String>{
+
+        @Override
+        public int compare(String o1, String o2) {
+            return Integer.compare(Month.fromString(o1).ordinal(),Month.fromString(o2).ordinal());
+        }
+        
+    }
     @Override
     public Comparator<String> sortByDays() {
-        return null;
+        return new SortByDate();
     }
 
     @Override
     public Comparator<String> sortByOrder() {
-        return null;
+        return new SortByMonthOrder();
     }
 }
